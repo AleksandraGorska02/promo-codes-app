@@ -3,4 +3,5 @@ package com.promoapp.promoapp.DB.Code;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CodeRepository extends JpaRepository<Code, Long> {
+    Code findByCode(String code);
 }

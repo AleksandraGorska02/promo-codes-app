@@ -95,10 +95,6 @@ public class Code {
     }
     public boolean checkCode(String code){
       String regex = "^[a-zA-Z0-9]{3,23}$";
-if(!code.matches(regex)){
- return false;
-      }
-
-
-        return true;}
+        return code.matches(regex);
+    }
 }

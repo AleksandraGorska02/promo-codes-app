@@ -20,4 +20,8 @@ public class CodeService {
 
         codeRepository.save(code);
     }
+
+    public Code getCodeDetails(String code) {
+        return codeRepository.findByCode(code);
+    }
 }

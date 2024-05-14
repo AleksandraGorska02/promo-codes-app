@@ -24,11 +24,18 @@ public class ProductController {
     }
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        if(product.getPrice()<0){
+            return new ResponseEntity<>("Price must be greater than 0",HttpStatus.BAD_REQUEST);
+        }
         productService.addProduct(product);
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PostMapping("edit/{name}")
     public ResponseEntity<?> editProduct(@PathVariable String name, @RequestBody Product product) {
+        if(product.getPrice()<0){
+            return new ResponseEntity<>("Price must be greater than 0",HttpStatus.BAD_REQUEST);
+        }
         productService.editProduct(name, product);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
