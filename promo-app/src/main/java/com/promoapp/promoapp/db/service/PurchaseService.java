@@ -1,7 +1,10 @@
-package com.promoapp.promoapp.DB.Purchase;
+package com.promoapp.promoapp.db.service;
 
-import com.promoapp.promoapp.DB.Code.Code;
-import com.promoapp.promoapp.DB.Product.Product;
+import com.promoapp.promoapp.db.entity.CalculatedResponse;
+import com.promoapp.promoapp.db.entity.Code;
+import com.promoapp.promoapp.db.entity.Purchase;
+import com.promoapp.promoapp.db.repository.PurchaseRepository;
+import com.promoapp.promoapp.db.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +20,7 @@ public class PurchaseService {
     }
 
 
-    public Purchase savePurchaseWithCode(Product productDetails, Code codeDetails, CalculateResponse calculateResponse) {
+    public Purchase savePurchaseWithCode(Product productDetails, Code codeDetails, CalculatedResponse calculateResponse) {
         Purchase purchase = new Purchase();
         purchase.setProductName(productDetails.getName());
         purchase.setRegularPrice(productDetails.getPrice());
@@ -40,6 +43,7 @@ public class PurchaseService {
 
         return purchase;
     }
+
     public List<Object[]> getSalesReport() {
         return purchaseRepository.findSalesReport();
     }

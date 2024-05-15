@@ -1,16 +1,16 @@
 package com.promoapp.promoapp.controller;
 
-import com.promoapp.promoapp.DB.Code.Code;
-import com.promoapp.promoapp.DB.Product.Product;
-import com.promoapp.promoapp.DB.Purchase.CalculateResponse;
-import com.promoapp.promoapp.DB.Purchase.Purchase;
-import com.promoapp.promoapp.DB.Purchase.PurchaseService;
+import com.promoapp.promoapp.db.entity.Code;
+import com.promoapp.promoapp.db.entity.Product;
+import com.promoapp.promoapp.db.entity.CalculatedResponse;
+import com.promoapp.promoapp.db.entity.Purchase;
+import com.promoapp.promoapp.db.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.promoapp.promoapp.DB.Code.CodeService;
-import com.promoapp.promoapp.DB.Product.ProductService;
+import com.promoapp.promoapp.db.service.CodeService;
+import com.promoapp.promoapp.db.service.ProductService;
 
 import static com.promoapp.promoapp.logic.Calculation.*;
 
@@ -45,7 +45,7 @@ public class PurchaseController {
     }
 
     @PostMapping("/buy/{product}")
-    public ResponseEntity<?> buyProduct(@PathVariable String product,  @RequestParam(required = false) String code) {
+    public ResponseEntity<?> buyProduct(@PathVariable String product, @RequestParam(required = false) String code) {
         if (code == null) {
             Product productDetails = productService.getProductDetails(product);
             if (productDetails == null) {
@@ -62,7 +62,7 @@ public class PurchaseController {
         if (productDetails == null) {
             return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
         }
-        CalculateResponse calculateDiscount = checkCodeValidity(codeDetails, productDetails);
+        CalculatedResponse calculateDiscount = checkCodeValidity(codeDetails, productDetails);
 
         if (!calculateDiscount.isValid()) {
             return new ResponseEntity<>(calculateDiscount, HttpStatus.OK);

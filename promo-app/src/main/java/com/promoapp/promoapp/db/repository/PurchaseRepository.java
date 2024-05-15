@@ -1,5 +1,6 @@
-package com.promoapp.promoapp.DB.Purchase;
+package com.promoapp.promoapp.db.repository;
 
+import com.promoapp.promoapp.db.entity.Purchase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

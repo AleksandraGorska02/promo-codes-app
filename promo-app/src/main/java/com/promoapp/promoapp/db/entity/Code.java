@@ -1,7 +1,6 @@
-package com.promoapp.promoapp.DB.Code;
+package com.promoapp.promoapp.db.entity;
 
 import jakarta.persistence.*;
-import org.springframework.core.type.filter.RegexPatternTypeFilter;
 
 import java.time.LocalDate;
 
@@ -25,7 +24,7 @@ public class Code {
     @Column(nullable = false)
     private int maxUses;
     @Column(nullable = false)
-    private int currentUses=0;
+    private int currentUses = 0;
 
     public void setId(Long id) {
         this.id = id;
@@ -93,8 +92,5 @@ public class Code {
     public void setCurrentUses(int currentUses) {
         this.currentUses = currentUses;
     }
-    public boolean checkCode(String code){
-      String regex = "^[a-zA-Z0-9]{3,23}$";
-        return code.matches(regex);
-    }
+
 }

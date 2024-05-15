@@ -1,13 +1,15 @@
 package com.promoapp.promoapp.controller;
 
-import com.promoapp.promoapp.DB.Code.Code;
-import com.promoapp.promoapp.DB.Code.CodeService;
+import com.promoapp.promoapp.db.entity.Code;
+import com.promoapp.promoapp.db.service.CodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.promoapp.promoapp.db.service.CodeService.checkCode;
 
 @RestController
 @RequestMapping("/code")
@@ -26,24 +28,30 @@ public class CodeController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addCode(@RequestBody Code code) {
-       if(!code.checkCode(code.getCode())){
+        if (!checkCode(code.getCode())) {
 
-              return new ResponseEntity<>("code must be 3-24 characters long and contain only letters and numbers",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("code must be 3-24 characters long and contain only letters and numbers", HttpStatus.BAD_REQUEST);
 
-       }
-       if(code.isPercentage()&&code.getDiscount()>100){
-           return new ResponseEntity<>("The discount cannot be greater than 100%",HttpStatus.BAD_REQUEST);
-       }
-        codeService.addCode(code);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        if (code.isPercentage() && code.getDiscount() > 100) {
+            return new ResponseEntity<>("The discount cannot be greater than 100%", HttpStatus.BAD_REQUEST);
+        }
+        if (codeService.addCode(code)) {
+            return new ResponseEntity<>("code added successfully", HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>("Code already exists", HttpStatus.BAD_REQUEST);
+
+
     }
+
     @GetMapping("/details/{code}")
     public ResponseEntity<?> getCodeDetails(@PathVariable String code) {
         Code codeDetails = codeService.getCodeDetails(code);
-        if(codeDetails == null) {
+        if (codeDetails == null) {
             return new ResponseEntity<>("Code not found", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(codeDetails);
+        return new ResponseEntity<>(codeDetails, HttpStatus.OK);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.promoapp.promoapp.controller;
 
-import com.promoapp.promoapp.DB.Purchase.PurchaseService;
+import com.promoapp.promoapp.db.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +19,7 @@ public class ReportController {
     public ReportController(PurchaseService purchaseService) {
         this.purchaseService = purchaseService;
     }
+
     @GetMapping("/report")
     public ResponseEntity<?> getSalesReport() {
         List<Object[]> reportData = purchaseService.getSalesReport();

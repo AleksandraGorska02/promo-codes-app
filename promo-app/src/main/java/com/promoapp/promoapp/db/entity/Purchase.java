@@ -1,4 +1,4 @@
-package com.promoapp.promoapp.DB.Purchase;
+package com.promoapp.promoapp.db.entity;
 
 import jakarta.persistence.*;
 
@@ -9,13 +9,14 @@ public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate purchaseDate=LocalDate.now();
-    @Column( columnDefinition = "Decimal(10,2)")
+    private LocalDate purchaseDate = LocalDate.now();
+    @Column(columnDefinition = "Decimal(10,2)")
     private double regularPrice;
-    @Column( columnDefinition = "Decimal(10,2)")
+    @Column(columnDefinition = "Decimal(10,2)")
     private double amountOfDiscount;
     private String ProductName;
     private String currency;
+
 
     public void setId(Long id) {
         this.id = id;

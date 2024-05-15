@@ -1,9 +1,10 @@
-package com.promoapp.promoapp.DB.Code;
+package com.promoapp.promoapp.db.dataSeeder;
 
+import com.promoapp.promoapp.db.entity.Code;
+import com.promoapp.promoapp.db.repository.CodeRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 @Component
 public class CodeDataSeeder implements CommandLineRunner {
     private final CodeRepository codeRepository;
@@ -11,6 +12,7 @@ public class CodeDataSeeder implements CommandLineRunner {
     public CodeDataSeeder(CodeRepository codeRepository) {
         this.codeRepository = codeRepository;
     }
+
     private void seedData(CodeRepository codeRepository) {
         Code code1 = new Code();
         code1.setCode("Code1");
@@ -42,13 +44,12 @@ public class CodeDataSeeder implements CommandLineRunner {
         code4.setMaxUses(1);
 
 
-
-
         codeRepository.save(code1);
         codeRepository.save(code2);
         codeRepository.save(code3);
         codeRepository.save(code4);
     }
+
     @Override
     public void run(String... args) throws Exception {
         seedData(codeRepository);
