@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -31,8 +32,9 @@ public class ProductService {
 
     }
 
-    public void editProduct(String name, Product product) {
-        Product productToEdit = productRepository.findByName(name);
+    public void editProduct(long id, Product product) {
+        Product productToEdit = productRepository.findById(id);
+
         if (product.getName() != null) {
             productToEdit.setName(product.getName());
         }
@@ -49,8 +51,8 @@ public class ProductService {
         productRepository.save(productToEdit);
     }
 
-    public Product getProductDetails(String name) {
-        return productRepository.findByName(name);
+    public Product getProductDetails(long id) {
+        return productRepository.findById(id);
     }
 
 

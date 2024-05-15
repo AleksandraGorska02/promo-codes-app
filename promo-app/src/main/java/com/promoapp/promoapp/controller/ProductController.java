@@ -32,18 +32,22 @@ public class ProductController {
         if (productService.addProduct(product)) {
             return new ResponseEntity<>("Product added successfully", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Product already exists", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("make sure you fill in all the fields", HttpStatus.BAD_REQUEST);
 
 
     }
 
 
-    @PostMapping("edit/{name}")
-    public ResponseEntity<?> editProduct(@PathVariable String name, @RequestBody Product product) {
+    @PostMapping("edit/{id}")
+    public ResponseEntity<?> editProduct(@PathVariable long id, @RequestBody Product product) {
+        if(productService.getProductDetails(id) == null) {
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+        }
         if (product.getPrice() < 0) {
             return new ResponseEntity<>("Price must be greater than 0", HttpStatus.BAD_REQUEST);
         }
-        productService.editProduct(name, product);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        productService.editProduct(id, product);
+
+        return new ResponseEntity<>("Product edited successfully", HttpStatus.OK);
     }
 }

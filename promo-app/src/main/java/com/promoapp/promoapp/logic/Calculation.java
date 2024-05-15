@@ -19,7 +19,7 @@ public class Calculation {
 
     public static double calculateDiscountPercentage(double price, double discount) {
 
-        double discountAmount = price * discount / 100;
+        double discountAmount = price * (discount / 100);
 
         return price - discountAmount;
 
@@ -40,15 +40,20 @@ public class Calculation {
             response = "Code currency does not match product currency";
             return new CalculatedResponse(response, price, false, 0);
         }
-        double discount = code.getDiscount();
+       double discount = code.getDiscount();
+
         if (code.isPercentage()) {
             price = calculateDiscountPercentage(price, discount);
-            discount = price * discount / 100;
+            discount = product.getPrice() * (discount / 100);
         } else {
             price = calculateDiscountAmount(price, discount);
+            if(price==0){
+               discount= product.getPrice();
+            }
         }
         response = "Discount applied";
         return new CalculatedResponse(response, price, true, discount);
 
     }
+
 }

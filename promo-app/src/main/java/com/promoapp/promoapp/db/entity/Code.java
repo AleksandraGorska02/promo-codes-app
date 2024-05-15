@@ -26,6 +26,8 @@ public class Code {
     @Column(nullable = false)
     private int currentUses = 0;
 
+
+
     public void setId(Long id) {
         this.id = id;
     }

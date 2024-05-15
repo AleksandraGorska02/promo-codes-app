@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import com.promoapp.promoapp.db.service.CodeService;
 import com.promoapp.promoapp.db.service.ProductService;
 
+import java.lang.annotation.Target;
+
 import static com.promoapp.promoapp.logic.Calculation.*;
 
 @RestController
@@ -29,13 +31,13 @@ public class PurchaseController {
     }
 
 
-    @GetMapping("/discount/{product}")
-    public ResponseEntity<?> calculateDiscount(@PathVariable String product, @RequestParam String code) {
+    @GetMapping("/discount/{productId}")
+    public ResponseEntity<?> calculateDiscount(@PathVariable long productId, @RequestParam String code) {
         Code codeDetails = codeService.getCodeDetails(code);
         if (codeDetails == null) {
             return new ResponseEntity<>("Code not found", HttpStatus.NOT_FOUND);
         }
-        Product productDetails = productService.getProductDetails(product);
+        Product productDetails = productService.getProductDetails(productId);
         if (productDetails == null) {
             return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
         }
@@ -44,10 +46,10 @@ public class PurchaseController {
         return new ResponseEntity<>(checkCodeValidity(codeDetails, productDetails), HttpStatus.OK);
     }
 
-    @PostMapping("/buy/{product}")
-    public ResponseEntity<?> buyProduct(@PathVariable String product, @RequestParam(required = false) String code) {
+    @PostMapping("/buy/{productId}")
+    public ResponseEntity<?> buyProduct(@PathVariable long productId, @RequestParam(required = false) String code) {
         if (code == null) {
-            Product productDetails = productService.getProductDetails(product);
+            Product productDetails = productService.getProductDetails(productId);
             if (productDetails == null) {
                 return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
             }
@@ -58,7 +60,7 @@ public class PurchaseController {
         if (codeDetails == null) {
             return new ResponseEntity<>("Code not found", HttpStatus.NOT_FOUND);
         }
-        Product productDetails = productService.getProductDetails(product);
+        Product productDetails = productService.getProductDetails(productId);
         if (productDetails == null) {
             return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
         }
@@ -72,6 +74,8 @@ public class PurchaseController {
 
         }
 
+
     }
+
 
 }

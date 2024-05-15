@@ -28,22 +28,27 @@ public class CodeController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addCode(@RequestBody Code code) {
-        if (!checkCode(code.getCode())) {
+        if (code.getCode() == null || code.getDiscount() == 0 || code.getCurrency() == null || code.getExpirationDate() == null || code.getMaxUses() == 0) {
+            return new ResponseEntity<>("All fields must be filled", HttpStatus.BAD_REQUEST);}
+            if (!checkCode(code.getCode())) {
 
-            return new ResponseEntity<>("code must be 3-24 characters long and contain only letters and numbers", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("code must be 3-24 characters long and contain only letters and numbers", HttpStatus.BAD_REQUEST);
+
+            }
+            if (code.isPercentage() && code.getDiscount() > 100) {
+                return new ResponseEntity<>("The discount cannot be greater than 100%", HttpStatus.BAD_REQUEST);
+            }
+            if (code.getDiscount() < 0) {
+                return new ResponseEntity<>("The discount cannot be negative", HttpStatus.BAD_REQUEST);
+            }
+            if (codeService.addCode(code)) {
+                return new ResponseEntity<>("code added successfully", HttpStatus.OK);
+
+            }
+            return new ResponseEntity<>("Code already exists", HttpStatus.BAD_REQUEST);
+
 
         }
-        if (code.isPercentage() && code.getDiscount() > 100) {
-            return new ResponseEntity<>("The discount cannot be greater than 100%", HttpStatus.BAD_REQUEST);
-        }
-        if (codeService.addCode(code)) {
-            return new ResponseEntity<>("code added successfully", HttpStatus.OK);
-
-        }
-        return new ResponseEntity<>("Code already exists", HttpStatus.BAD_REQUEST);
-
-
-    }
 
     @GetMapping("/details/{code}")
     public ResponseEntity<?> getCodeDetails(@PathVariable String code) {
