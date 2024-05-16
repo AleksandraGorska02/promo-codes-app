@@ -1,5 +1,18 @@
 # Promo Codes App
 
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Elements](#elements)
+- [REST API Endpoints](#rest-api-endpoints)
+- [Technologies](#technologies)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Example Requests](#example-requests)
+
+
 ## Introduction
 
 This application is designed to manage discount codes (promo codes) for sales or promotions. It provides a REST API for creating, updating, and using promo codes, as well as managing products and simulating purchases. The backend is developed using Java and the Spring framework, with an in-memory H2 database for data storage
