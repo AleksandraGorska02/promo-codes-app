@@ -78,6 +78,7 @@ This application is designed to manage discount codes (promo codes) for sales or
 2. Change directory
     ```bash
     cd promo-codes-app
+    cd promo-app
     ```
 3. Build the project using Maven:
     ```bash
@@ -85,7 +86,7 @@ This application is designed to manage discount codes (promo codes) for sales or
     ```
 4. Run the application:
     ```bash
-    java -jar target/promo-codes-app-0.0.1-SNAPSHOT.jar
+    java -jar target/promo-app-0.0.1-SNAPSHOT.jar
     ```
     or
     ```bash
