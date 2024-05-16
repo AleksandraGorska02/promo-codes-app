@@ -14,6 +14,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -109,7 +110,7 @@ class ProductControllerTest {
         when(productService.addProduct(any())).thenReturn(true);
 
 
-        this.mockMvc.perform(post("/product/edit/1")
+        this.mockMvc.perform(put("/product/edit/1")
                         .contentType("application/json")
                         .content("{\"name\":\"product1\",\"price\":10.0,\"currency\":\"USD\"}"))
                 .andExpect(content().string("Product edited successfully"));
@@ -120,7 +121,7 @@ class ProductControllerTest {
     void editProductNotFound() throws Exception {
 
 
-        this.mockMvc.perform(post("/product/edit/1")
+        this.mockMvc.perform(put("/product/edit/1")
                         .contentType("application/json")
                         .content("{\"name\":\"product1\",\"price\":10.0,\"currency\":\"USD\"}"))
                 .andExpect(status().isNotFound())
@@ -139,7 +140,7 @@ class ProductControllerTest {
         when(productService.getProductDetails(1)).thenReturn(product1);
         when(productService.addProduct(any())).thenReturn(true);
 
-        this.mockMvc.perform(post("/product/edit/1")
+        this.mockMvc.perform(put("/product/edit/1")
                         .contentType("application/json")
                         .content("{\"name\":\"product1\",\"price\":-10.0,\"currency\":\"USD\"}"))
                 .andExpect(status().isBadRequest())

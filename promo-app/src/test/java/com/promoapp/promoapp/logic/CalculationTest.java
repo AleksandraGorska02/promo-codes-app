@@ -30,12 +30,13 @@ class CalculationTest {
         assertEquals(5, Calculation.calculateDiscountPercentage(10, 50));
         assertEquals(0, Calculation.calculateDiscountPercentage(5, 100));
         assertEquals(90, Calculation.calculateDiscountPercentage(100, 10));
+        assertEquals(12.43, Calculation.calculateDiscountPercentage(18.55, 33));
     }
 
     @Test
     void checkCodeValidityExpiredCode() {
         Code code = new Code();
-        code.setExpirationDate(String.valueOf(LocalDate.now().minusDays(1)));  // Expired code
+        code.setExpirationDate(String.valueOf(LocalDate.now().minusDays(1)));
         code.setCurrentUses(0);
         code.setMaxUses(10);
         code.setCurrency("USD");
@@ -90,7 +91,7 @@ class CalculationTest {
         CalculatedResponse response = Calculation.checkCodeValidity(code, product);
         assertEquals("Code currency does not match product currency", response.getResponse());
         assertEquals(100, response.getPrice());
-        assertEquals(false, response.isValid());
+        assertFalse(response.isValid());
         assertEquals(0, response.getAmountOfDiscount());
     }
 

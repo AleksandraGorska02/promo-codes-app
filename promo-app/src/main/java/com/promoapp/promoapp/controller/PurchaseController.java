@@ -48,11 +48,13 @@ public class PurchaseController {
 
     @PostMapping("/buy/{productId}")
     public ResponseEntity<?> buyProduct(@PathVariable long productId, @RequestParam(required = false) String code) {
+
+        Product productDetails = productService.getProductDetails(productId);
+        if (productDetails == null) {
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+        }
         if (code == null) {
-            Product productDetails = productService.getProductDetails(productId);
-            if (productDetails == null) {
-                return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
-            }
+
             Purchase purchase = purchaseService.savePurchaseWithoutCode(productDetails);
             return new ResponseEntity<>(purchase, HttpStatus.OK);
         }
@@ -60,10 +62,7 @@ public class PurchaseController {
         if (codeDetails == null) {
             return new ResponseEntity<>("Code not found", HttpStatus.NOT_FOUND);
         }
-        Product productDetails = productService.getProductDetails(productId);
-        if (productDetails == null) {
-            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
-        }
+
         CalculatedResponse calculateDiscount = checkCodeValidity(codeDetails, productDetails);
 
         if (!calculateDiscount.isValid()) {

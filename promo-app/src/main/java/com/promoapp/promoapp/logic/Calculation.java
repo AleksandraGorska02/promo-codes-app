@@ -5,6 +5,7 @@ import com.promoapp.promoapp.db.entity.Product;
 import com.promoapp.promoapp.db.entity.CalculatedResponse;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -20,8 +21,12 @@ public class Calculation {
     public static double calculateDiscountPercentage(double price, double discount) {
 
         double discountAmount = price * (discount / 100);
+        discountAmount=Math.round(discountAmount*100.0)/100.0;
 
         return price - discountAmount;
+
+
+
 
     }
 
@@ -44,7 +49,7 @@ public class Calculation {
 
         if (code.isPercentage()) {
             price = calculateDiscountPercentage(price, discount);
-            discount = product.getPrice() * (discount / 100);
+            discount = Math.round((product.getPrice() * (discount / 100)*100.0))/100.0;
         } else {
             price = calculateDiscountAmount(price, discount);
             if(price==0){

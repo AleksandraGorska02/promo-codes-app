@@ -38,7 +38,7 @@ public class ProductController {
     }
 
 
-    @PostMapping("edit/{id}")
+    @PutMapping("edit/{id}")
     public ResponseEntity<?> editProduct(@PathVariable long id, @RequestBody Product product) {
         if(productService.getProductDetails(id) == null) {
             return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
