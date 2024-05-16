@@ -1,7 +1,10 @@
 package com.promoapp.promoapp.controller;
 
+import com.promoapp.promoapp.db.entity.CalculatedResponse;
 import com.promoapp.promoapp.db.entity.Code;
 import com.promoapp.promoapp.db.entity.Product;
+import com.promoapp.promoapp.db.entity.Purchase;
+import com.promoapp.promoapp.db.service.CodeService;
 import com.promoapp.promoapp.db.service.ProductService;
 import com.promoapp.promoapp.db.service.PurchaseService;
 import org.junit.jupiter.api.Test;
@@ -10,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -18,16 +21,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.promoapp.promoapp.db.service.CodeService;
-import com.promoapp.promoapp.db.service.ProductService;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-
-import static org.junit.jupiter.api.Assertions.*;
 @WebMvcTest(PurchaseController.class)
 class PurchaseControllerTest {
     @Autowired
@@ -147,5 +140,112 @@ class PurchaseControllerTest {
                 .andExpect(content().json("{\"price\": 100, \"amountOfDiscount\": 0, \"valid\": false, \"response\": \"Code is expired\"}"));
     }
 
+    @Test
+    void buyProductWithoutCode() throws Exception {
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("product");
+        product.setPrice(100);
+        product.setCurrency("USD");
+        Purchase purchase = new Purchase();
+        purchase.setId(1L);
+        purchase.setPurchaseDate(LocalDate.of(2024, 5, 15));
+        purchase.setRegularPrice(100.0);
+        purchase.setAmountOfDiscount(0.0);
+        purchase.setCurrency("USD");
+        purchase.setProductName("product");
+        when(productService.getProductDetails(1)).thenReturn(product);
+        when(purchaseService.savePurchaseWithoutCode(product)).thenReturn(purchase);
+        this.mockMvc.perform(post("/purchase/buy/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{"
+                        + "\"id\": 1,"
+                        + "\"purchaseDate\": \"2024-05-15\","
+                        + "\"regularPrice\": 100.0,"
+                        + "\"amountOfDiscount\": 0.0,"
+                        + "\"currency\": \"USD\","
+                        + "\"productName\": \"product\""
+                        + "}"));
+    }
+
+    @Test
+    void buyProductWithCode() throws Exception {
+        Code code = new Code();
+        code.setCode("code");
+        code.setDiscount(10);
+        code.setMaxUses(10);
+        code.setExpirationDate("2030-01-01");
+        code.setCurrency("USD");
+
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("product");
+        product.setPrice(100);
+        product.setCurrency("USD");
+
+        Purchase purchase = new Purchase();
+        purchase.setId(1L);
+        purchase.setPurchaseDate(LocalDate.of(2024, 5, 15));
+        purchase.setRegularPrice(100.0);
+        purchase.setAmountOfDiscount(10.0);
+        purchase.setCurrency("USD");
+        purchase.setProductName("product");
+
+
+        when(codeService.getCodeDetails("code")).thenReturn(code);
+        when(productService.getProductDetails(1)).thenReturn(product);
+        when(purchaseService.savePurchaseWithCode(any(Product.class), any(Code.class), any(CalculatedResponse.class))).thenReturn(purchase);
+
+        this.mockMvc.perform(post("/purchase/buy/1").param("code", "code"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{"
+                        + "\"id\": 1,"
+                        + "\"purchaseDate\": \"2024-05-15\","
+                        + "\"regularPrice\": 100.0,"
+                        + "\"amountOfDiscount\": 10.0,"
+                        + "\"currency\": \"USD\","
+                        + "\"productName\": \"product\""
+                        + "}"));
+    }
+
+    @Test
+    void buyProductWithBiggerDiscount() throws Exception {
+        Code code = new Code();
+        code.setCode("code");
+        code.setDiscount(120);
+        code.setMaxUses(10);
+        code.setExpirationDate("2030-01-01");
+        code.setCurrency("USD");
+
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("product");
+        product.setPrice(100);
+        product.setCurrency("USD");
+
+        Purchase purchase = new Purchase();
+        purchase.setId(1L);
+        purchase.setPurchaseDate(LocalDate.of(2024, 5, 15));
+        purchase.setRegularPrice(100.0);
+        purchase.setAmountOfDiscount(100.0);
+        purchase.setCurrency("USD");
+        purchase.setProductName("product");
+
+
+        when(codeService.getCodeDetails("code")).thenReturn(code);
+        when(productService.getProductDetails(1)).thenReturn(product);
+        when(purchaseService.savePurchaseWithCode(any(Product.class), any(Code.class), any(CalculatedResponse.class))).thenReturn(purchase);
+
+        this.mockMvc.perform(post("/purchase/buy/1").param("code", "code"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{"
+                        + "\"id\": 1,"
+                        + "\"purchaseDate\": \"2024-05-15\","
+                        + "\"regularPrice\": 100.0,"
+                        + "\"amountOfDiscount\": 100.0,"
+                        + "\"currency\": \"USD\","
+                        + "\"productName\": \"product\""
+                        + "}"));
+    }
 
 }

@@ -9,12 +9,10 @@ public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate purchaseDate = LocalDate.now();
-    @Column(columnDefinition = "Decimal(10,2)")
+    private LocalDate purchaseDate;
     private double regularPrice;
-    @Column(columnDefinition = "Decimal(10,2)")
     private double amountOfDiscount;
-    private String ProductName;
+    private String productName;
     private String currency;
 
 
@@ -51,11 +49,11 @@ public class Purchase {
     }
 
     public String getProductName() {
-        return ProductName;
+        return productName;
     }
 
     public void setProductName(String productName) {
-        ProductName = productName;
+        this.productName = productName;
     }
 
     public String getCurrency() {
